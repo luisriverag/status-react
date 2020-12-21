@@ -12,7 +12,6 @@
             [status-im.ui.screens.routing.main :as routing]
             [status-im.ui.screens.signing.views :as signing]
             [status-im.ui.screens.popover.views :as popover]
-            [status-im.ui.screens.communities.views :as communities]
             [status-im.ui.screens.multiaccounts.recover.views :as recover.views]
             [status-im.ui.screens.wallet.send.views :as wallet]
             [status-im.ui.components.status-bar.view :as statusbar]
@@ -25,13 +24,14 @@
 (defn on-sheet-cancel []
   (re-frame/dispatch [:bottom-sheet/hide]))
 
-(defn bottom-sheet []
+(defn bottom-sheet
+  "DEPRECATED: Do not use this place, use event parameters"
+  []
   (let [{:keys [show? view]} @(re-frame/subscribe [:bottom-sheet])
         {:keys [content]
          :as   opts}
         (cond-> {:visible?   show?
                  :on-cancel on-sheet-cancel}
-
           (map? view)
           (merge view)
 
@@ -49,18 +49,6 @@
 
           (= view :learn-more)
           (merge about-app/learn-more)
-
-          (= view :create-community)
-          (merge communities/create-sheet)
-
-          (= view :import-community)
-          (merge communities/import-sheet)
-
-          (= view :create-community-channel)
-          (merge communities/create-channel-sheet)
-
-          (= view :invite-people-community)
-          (merge communities/invite-people-sheet)
 
           (= view :recover-sheet)
           (merge recover.views/bottom-sheet))]
