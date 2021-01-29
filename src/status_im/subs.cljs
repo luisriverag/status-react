@@ -217,6 +217,9 @@
 
 (reg-root-key-sub :acquisition :acquisition)
 
+
+(reg-root-key-sub :buy-crypto/on-ramps :buy-crypto/on-ramps)
+
 ;; communities
 (re-frame/reg-sub
  :communities
