@@ -1310,7 +1310,7 @@
 
 (handlers/register-handler-fx
  :buy-crypto.ui/loaded
- (fn [{:keys [db] :as cofx} _]
+ (fn [_ _]
    {::json-rpc/call [{:method "wallet_getCryptoOnRamps"
                       :params []
                       :on-success (fn [on-ramps]

@@ -3,10 +3,8 @@
             [reagent.core :as reagent]
             [status-im.ethereum.core :as ethereum]
             [status-im.i18n :as i18n]
-            [status-im.ui.screens.chat.photos :as photos]
             [status-im.ui.components.animation :as animation]
             [status-im.ui.components.colors :as colors]
-            [status-im.ui.components.icons.icons :as icons]
             [quo.core :as quo]
             [status-im.ui.components.list.views :as list]
             [status-im.ui.components.react :as react]
@@ -15,6 +13,7 @@
             [status-im.ui.screens.wallet.account.styles :as styles]
             [status-im.ui.screens.wallet.accounts.sheets :as sheets]
             [status-im.ui.screens.wallet.accounts.views :as accounts]
+            [status-im.ui.screens.wallet.buy-crypto.views :as buy-crypto]
             [status-im.ui.screens.wallet.transactions.views :as history]
             [status-im.utils.money :as money]
             [status-im.wallet.utils :as wallet.utils]
@@ -25,8 +24,6 @@
   (:require-macros [status-im.utils.views :as views]))
 
 (def state (reagent/atom {:tab :assets}))
-
-(def learn-more-url "https://our.status.im/")
 
 (defn toolbar-view [title]
   [topbar/topbar
@@ -69,7 +66,7 @@
      [react/view {:position :absolute :top 12 :right 12}
       [react/touchable-highlight {:on-press #(re-frame/dispatch [:show-popover {:view :share-account :address address}])}
        [vector-icons/icon :main-icons/share {:color               colors/white-persist
-                                      :accessibility-label :share-wallet-address-icon}]]]
+                                             :accessibility-label :share-wallet-address-icon}]]]
      [react/view {:height                     button-group-height :background-color          colors/black-transparent-20
                   :border-bottom-right-radius 8                   :border-bottom-left-radius 8 :flex-direction :row}
       (if (= type :watch)
@@ -120,85 +117,6 @@
      {:style {:color colors/blue}}
      (i18n/label :t/check-on-opensea)]]])
 
-(defn render-on-ramp [{:keys [name fees region logo-url site-url description]}]
-  [react/touchable-highlight {:on-press #(re-frame/dispatch [:browser.ui/message-link-pressed site-url])
-                              :style {:flex 1}}
-   [quo/list-item
-    {:title          [react/view {:style {:flex 1}}
-                      [quo/text {:size :large
-                                 :weight :bold}
-                       name]
-                      [quo/text {} description]]
-     :subtitle       [react/view {:style {:flex 1}}
-                      [quo/text {:size :small
-                                 :color :secondary} fees]
-                      [quo/text {:size :small
-                                 :color :secondary} region]]
-     :icon           [photos/photo logo-url {:size 40}]
-     :left-side-alignment :flex-start
-     :accessory      :text}]])
-
-(views/defview render-buy-crypto []
-  (views/letsubs [on-ramps [:buy-crypto/on-ramps]]
-    [react/view {:flex 1}
-     [topbar/topbar {:modal? true}]
-     [react/view {:align-items :center}
-      [react/view {:padding-vertical 16}
-       [quo/text {:weight :bold
-                 :size :x-large}
-       (i18n/label :t/buy-crypto)]]
-      [quo/text {:color :secondary}
-       (i18n/label :t/buy-crypto-choose-a-service)]
-      [react/touchable-highlight {:on-press #(re-frame/dispatch [:browser.ui/open-url learn-more-url])}
-       [react/view {:padding-vertical 11}
-        [quo/text {:color :link} (i18n/label :learn-more)]]]]
-     [quo/separator]
-     [list/flat-list {:data               on-ramps
-                      :key-fn             :site-url
-                      :render-fn          render-on-ramp}]]))
-
-(defn buy-crypto []
-  (reagent/create-class
-   {:component-did-mount #(re-frame/dispatch [:buy-crypto.ui/loaded])
-    :reagent-render render-buy-crypto}))
-
-(defn on-buy-crypto-pressed []
-  (re-frame/dispatch [:navigate-to :buy-crypto]))
-
-(defn buy-crypto-banner []
-  [react/touchable-highlight {:on-press on-buy-crypto-pressed}
-   [react/view {:style {:margin-horizontal 16
-                        :flex-direction :row
-                        :justify-content :space-between
-                        :align-items :center
-                        :flex 1
-                        :margin-top 16
-                        :border-radius 16
-                        :margin-bottom 8
-                        :padding-horizontal 12
-                        :padding-vertical 5
-                        :background-color "#ECEFFC"}}
-    [react/view {:flex-direction :row}
-      [react/view {:style {:height 16
-                           :padding 4
-                           :margin-top 4
-                           :justify-content :center
-                           :border-radius 4
-                           :background-color colors/blue}}
-       [quo/text {:weight :bold
-                  :size :tiny
-                  :style {:text-transform :uppercase
-                          :color colors/white}}
-        (i18n/label :t/new)]]
-     [react/view {:style {:padding-left 5}}
-       [quo/text {:size :large
-                  :color :link} (i18n/label :t/buy-crypto)]]]
-    [react/view {:style {:align-content :flex-end
-                         :align-self :flex-end}}
-     [react/image {:source (icons/icon-source :buy-crypto)
-                   :style {:width 68
-                           :height 36}}]]]])
-
 (views/defview assets-and-collections [address]
   (views/letsubs [{:keys [tokens nfts]} [:wallet/visible-assets-with-values address]
                   currency [:wallet/currency]]
@@ -211,12 +129,12 @@
        (cond
          (= tab :assets)
          [react/view {}
-           [buy-crypto-banner]
-           [list/flat-list {:data               tokens
-                            :default-separator? false
-                            :key-fn             :name
-                            :render-data        (:code currency)
-                            :render-fn          accounts/render-asset}]]
+          [buy-crypto/banner]
+          [list/flat-list {:data               tokens
+                           :default-separator? false
+                           :key-fn             :name
+                           :render-data        (:code currency)
+                           :render-fn          accounts/render-asset}]]
          (= tab :nft)
          [react/view
           [collectibles-link]

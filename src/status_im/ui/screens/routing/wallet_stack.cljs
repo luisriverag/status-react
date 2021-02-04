@@ -5,6 +5,7 @@
             [status-im.ui.screens.wallet.custom-tokens.views :as custom-tokens]
             [status-im.ui.screens.wallet.accounts.views :as wallet.accounts]
             [status-im.ui.screens.wallet.account.views :as wallet.account]
+            [status-im.ui.screens.wallet.buy-crypto.views :as wallet.buy-crypto]
             [status-im.ui.screens.wallet.add-new.views :as add-account]
             [status-im.ui.screens.wallet.account-settings.views :as account-settings]
             [status-im.ui.screens.wallet.events :as wallet.events]
@@ -23,7 +24,9 @@
     {:name      :wallet-account
      :component wallet.account/account}
     {:name      :buy-crypto
-     :component wallet.account/buy-crypto}
+     :component wallet.buy-crypto/container}
+    {:name      :buy-crypto-website
+     :component wallet.buy-crypto/website}
     {:name      :add-new-account
      :component add-account/add-account}
     {:name      :add-new-account-pin

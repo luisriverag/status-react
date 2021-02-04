@@ -1,8 +1,6 @@
 (ns status-im.ui.screens.wallet.events
   (:require [status-im.ui.screens.wallet.signing-phrase.views :as signing-phrase]
             [status-im.utils.handlers :as handlers]
-            [status-im.async-storage.core :as async-storage]
-            [re-frame.core :as re-frame]
             [status-im.utils.fx :as fx]))
 
 (fx/defn wallet-will-focus

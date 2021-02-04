@@ -4,8 +4,7 @@
             [re-frame.core :as re-frame]
             [reagent.core :as reagent]
             [status-im.i18n :as i18n]
-            [status-im.ui.screens.wallet.events :as wallet.events]
-            [status-im.ui.components.buy-crypto :as buy-crypto]
+            [status-im.ui.screens.wallet.buy-crypto.views :as buy-crypto]
             [status-im.ui.components.chat-icon.screen :as chat-icon]
             [status-im.ui.components.colors :as colors]
             [status-im.ui.components.icons.vector-icons :as icons]
@@ -212,6 +211,7 @@
                               :icon                :main-icons/more
                               :accessibility-label :accounts-more-options}]}
         [accounts]
+        [buy-crypto/banner]
         [assets]
         [react/view {:height 68}]]
        [send-button]])))

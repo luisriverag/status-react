@@ -806,6 +806,8 @@
     "buy-crypto-description": "Find a dapp to buy crypto now",
     "buy-crypto": "Buy crypto",
     "buy-crypto-choose-a-service": "Choose a service you'd like to use to buy crypto",
+    "buy-crypto-leaving": "You are leaving Status and entering a third party website to complete your purchase",
+    "opening-buy-crypto": "Opening {{site}}...",
     "network": "Network",
     "network-chain": "Network chain",
     "network-details": "Network details",
