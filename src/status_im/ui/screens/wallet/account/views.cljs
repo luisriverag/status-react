@@ -9,7 +9,7 @@
             [status-im.ui.components.list.views :as list]
             [status-im.ui.components.react :as react]
             [status-im.ui.components.topbar :as topbar]
-            [status-im.ui.components.icons.vector-icons :as vector-icons]
+            [status-im.ui.components.icons.vector-icons :as icons]
             [status-im.ui.screens.wallet.account.styles :as styles]
             [status-im.ui.screens.wallet.accounts.sheets :as sheets]
             [status-im.ui.screens.wallet.accounts.views :as accounts]
@@ -38,7 +38,7 @@
   [react/touchable-highlight {:on-press handler :style {:flex 1}}
    [react/view {:flex 1 :align-items :center :justify-content :center}
     [react/view {:flex-direction :row :align-items :center}
-     [vector-icons/icon icon {:color color}]
+     [icons/icon icon {:color color}]
      [react/text {:style {:margin-left 8 :color color}} label]]]])
 
 (def button-group-height 52)
@@ -65,7 +65,7 @@
        (ethereum/normalized-hex address)]]
      [react/view {:position :absolute :top 12 :right 12}
       [react/touchable-highlight {:on-press #(re-frame/dispatch [:show-popover {:view :share-account :address address}])}
-       [vector-icons/icon :main-icons/share {:color               colors/white-persist
+       [icons/icon :main-icons/share {:color                      colors/white-persist
                                              :accessibility-label :share-wallet-address-icon}]]]
      [react/view {:height                     button-group-height :background-color          colors/black-transparent-20
                   :border-bottom-right-radius 8                   :border-bottom-left-radius 8 :flex-direction :row}
@@ -109,7 +109,7 @@
              :align-items :center
              :background-color colors/blue-light
              :height           52}}
-    [vector-icons/tiny-icon
+    [icons/tiny-icon
      :tiny-icons/tiny-external
      {:color           colors/blue
       :container-style {:margin-right 5}}]
@@ -237,7 +237,7 @@
           [react/view {:style {:flex 1
                                :align-items :center
                                :margin 8}}
-           [vector-icons/icon
+           [icons/icon
             :main-icons/warning
             {:color           :red
              :container-style {:background-color (quo-colors/get-color :negative-02)

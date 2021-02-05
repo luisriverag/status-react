@@ -102,8 +102,11 @@
                  :size :tiny
                  :style sheets/highlight-text}
        (i18n/label :t/new)]]
-     [react/view {:style {:padding-left 5}}
+     [react/view {:style {:justify-content :center
+                          :align-items :center
+                          :padding-left 5}}
       [quo/text {:size :large
+                 :weight :medium
                  :color :link} (i18n/label :t/buy-crypto)]]]
     [react/view {:style {:align-content :flex-end
                          :align-self :flex-end}}

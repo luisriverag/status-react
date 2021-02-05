@@ -11,19 +11,18 @@
                        :margin-bottom 8
                        :padding-horizontal 12
                        :padding-vertical 5
-                       :background-color "#ECEFFC"})
+                       :background-color colors/blue-light})
+
 
 (def highlight-container
-  {:height 16
-   :padding 4
-   :margin-top 4
+  {:padding 4
    :justify-content :center
    :border-radius 4
    :background-color colors/blue})
 
 (def highlight-text
   {:text-transform :uppercase
-   :color colors/white})
+   :color "#FFFFFF"})
 
 (def icon
   {:width 68
