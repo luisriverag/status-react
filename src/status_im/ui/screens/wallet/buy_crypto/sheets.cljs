@@ -13,7 +13,6 @@
                        :padding-vertical 5
                        :background-color colors/blue-light})
 
-
 (def highlight-container
   {:padding 4
    :justify-content :center

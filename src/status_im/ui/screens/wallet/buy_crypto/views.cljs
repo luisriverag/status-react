@@ -73,6 +73,11 @@
                        :modal? true}]
        (when-not @has-loaded?
          [react/view {:style {:flex 1
+                              :position :absolute
+                              :top 0
+                              :left 0
+                              :right 0
+                              :bottom 0
                               :align-items :center
                               :justify-content :center}}
           [photos/photo logo-url {:size 40}]
@@ -85,7 +90,7 @@
             (i18n/label :t/buy-crypto-leaving)]]])
        [components.webview/webview
         {:onLoadEnd #(reset! has-loaded? true)
-         :containerStyle (when-not @has-loaded? {:display :none})
+         :containerStyle (when-not @has-loaded? {:opacity 0})
          :source {:uri site-url}}]])))
 
 (defn container []

@@ -66,7 +66,7 @@
      [react/view {:position :absolute :top 12 :right 12}
       [react/touchable-highlight {:on-press #(re-frame/dispatch [:show-popover {:view :share-account :address address}])}
        [icons/icon :main-icons/share {:color                      colors/white-persist
-                                             :accessibility-label :share-wallet-address-icon}]]]
+                                      :accessibility-label :share-wallet-address-icon}]]]
      [react/view {:height                     button-group-height :background-color          colors/black-transparent-20
                   :border-bottom-right-radius 8                   :border-bottom-left-radius 8 :flex-direction :row}
       (if (= type :watch)
