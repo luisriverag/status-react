@@ -35,23 +35,26 @@
      :left-side-alignment :flex-start
      :accessory      :text}]])
 
+(defn buy-crypto-header []
+  [react/view {:align-items :center}
+   [react/view {:padding-vertical 16}
+    [quo/text {:weight :bold
+               :size :x-large}
+     (i18n/label :t/buy-crypto)]]
+   [quo/text {:color :secondary}
+    (i18n/label :t/buy-crypto-choose-a-service)]
+   [react/touchable-highlight {:on-press #(re-frame/dispatch [:browser.ui/open-url learn-more-url])}
+    [react/view {:padding-vertical 11}
+     [quo/text {:color :link} (i18n/label :learn-more)]]]])
+
 (views/defview buy-crypto []
   (views/letsubs [on-ramps [:buy-crypto/on-ramps]]
     [react/view {:flex 1}
      [topbar/topbar {:modal? true}]
-     [react/view {:align-items :center}
-      [react/view {:padding-vertical 16}
-       [quo/text {:weight :bold
-                  :size :x-large}
-        (i18n/label :t/buy-crypto)]]
-      [quo/text {:color :secondary}
-       (i18n/label :t/buy-crypto-choose-a-service)]
-      [react/touchable-highlight {:on-press #(re-frame/dispatch [:browser.ui/open-url learn-more-url])}
-       [react/view {:padding-vertical 11}
-        [quo/text {:color :link} (i18n/label :learn-more)]]]]
      [quo/separator]
      [list/flat-list {:data               on-ramps
                       :key-fn             :site-url
+                      :header             [buy-crypto-header]
                       :render-fn          render-on-ramp}]]))
 
 (defn website [route]
@@ -90,6 +93,8 @@
             (i18n/label :t/buy-crypto-leaving)]]])
        [components.webview/webview
         {:onLoadEnd #(reset! has-loaded? true)
+         ;; NOTE: without this it crashes on android 11
+         :androidHardwareAccelerationDisabled true
          :containerStyle (when-not @has-loaded? {:opacity 0})
          :source {:uri site-url}}]])))
 
