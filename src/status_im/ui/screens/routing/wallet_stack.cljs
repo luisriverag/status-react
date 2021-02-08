@@ -22,11 +22,15 @@
      :style     {:padding-bottom tabbar.styles/tabs-diff}
      :component wallet.accounts/accounts-overview}
     {:name      :wallet-account
-     :component wallet.account/account}
-    {:name      :buy-crypto
+     :component  wallet.account/account}
+    {:name       :buy-crypto
+     :transition :presentation-ios
+     :insets     {:bottom true}
      :component wallet.buy-crypto/container}
-    {:name      :buy-crypto-website
-     :component wallet.buy-crypto/website}
+    {:name       :buy-crypto-website
+     :transition :presentation-ios
+     :insets     {:bottom true}
+     :component  wallet.buy-crypto/website}
     {:name      :add-new-account
      :component add-account/add-account}
     {:name      :add-new-account-pin
