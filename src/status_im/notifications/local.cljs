@@ -107,30 +107,44 @@
      :user-info notification
      :message   description}))
 
+(defn chat-by-message
+  [{:keys [chats]} {:keys [chatId from]}]
+  (if-let [chat (get chats chatId)]
+    (assoc chat :chat-id chatId)
+    (assoc (get chats from) :chat-id from)))
+
 (defn show-message-pn?
   [{{:keys [app-state multiaccount]} :db :as cofx}
-   {{:keys [message chat]} :body}]
-  (let [chat-id (get chat :id)
-        chat-type (get chat :chatType)]
-    (and
-     (or (= app-state "background")
-         (not (chat.models/foreground-chat? cofx chat-id)))
-     (or (contains? #{constants/one-to-one-chat-type
-                      constants/private-group-chat-type}
-                    chat-type)
-         (contains? (set (get message :mentions))
-                    (get multiaccount :public-key))))))
+   {{:keys [message]}           :body
+    {:keys [chat-id chat-type]} :chat}]
+  (and
+   (or (= app-state "background")
+       (not (chat.models/foreground-chat? cofx chat-id)))
+   (or (contains? #{constants/one-to-one-chat-type
+                    constants/private-group-chat-type}
+                  chat-type)
+       (contains? (set (get message :mentions))
+                  (get multiaccount :public-key)))))
 
 (defn create-message-notification
-  ([cofx notification]
-   (when (or (nil? cofx)
-             (show-message-pn? cofx notification))
-     (create-message-notification notification)))
-  ([{{:keys [message contact chat]} :body}]
-   (let [chat-type    (get chat :chatType)
-         chat-id      (get chat :id)
+  ([{:keys [db] :as cofx} {{:keys [message]} :body :as notification}]
+   (when-not (nil? cofx)
+     (let [chat         (chat-by-message db message)
+           contact-id   (get message :from)
+           contact      (get-in db [:contacts/contacts contact-id])
+           notification (assoc notification
+                               :chat chat
+                               :contact-id contact-id
+                               :contact contact)]
+       (when (show-message-pn? cofx notification)
+         (create-message-notification notification)))))
+  ([{{:keys [message]} :body
+     {:keys [chat-type] :as chat} :chat
+     {:keys [identicon]} :contact
+     contact-id :contact-id}]
+   (let [chat-id      (get message :chatId)
          contact-name @(re-frame/subscribe
-                        [:contacts/contact-name-by-identity (get contact :id)])
+                        [:contacts/contact-name-by-identity contact-id])
          group-chat?  (not= chat-type constants/one-to-one-chat-type)
          title        (clojure.string/join
                        " "
@@ -148,11 +162,11 @@
                                  "#")
                                (get chat :name)))))]
      {:type             "message"
-      :chatType         (str (get chat :chatType))
+      :chatType         (str chat-type)
       :from             title
       :chatId           chat-id
       :alias            title
-      :identicon        (get contact :identicon)
+      :identicon        identicon
       :whisperTimestamp (get message :whisperTimestamp)
       :text             (reply/get-quoted-text-with-mentions (:parsedText message))})))
 
