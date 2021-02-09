@@ -51,7 +51,6 @@
   (views/letsubs [on-ramps [:buy-crypto/on-ramps]]
     [react/view {:flex 1}
      [topbar/topbar {:modal? true}]
-     [quo/separator]
      [list/flat-list {:data               on-ramps
                       :key-fn             :site-url
                       :header             [buy-crypto-header]
@@ -114,7 +113,7 @@
        (i18n/label :t/new)]]
      [react/view {:style {:justify-content :center
                           :align-items :center
-                          :padding-left 5}}
+                          :padding-left 8}}
       [quo/text {:size :large
                  :weight :medium
                  :color :link} (i18n/label :t/buy-crypto)]]]
