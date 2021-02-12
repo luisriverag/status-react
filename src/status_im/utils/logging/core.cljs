@@ -3,10 +3,8 @@
             [status-im.native-module.core :as status]
             [status-im.utils.fx :as fx]
             [status-im.utils.types :as types]
-            [status-im.utils.handlers :as handlers]
-            [status-im.utils.email :as mail]
             [taoensso.timbre :as log]
-            [status-im.i18n :as i18n]
+            [status-im.i18n.i18n :as i18n]
             [status-im.utils.platform :as platform]
             [status-im.utils.build :as build]
             [status-im.transport.utils :as transport.utils]
@@ -56,6 +54,7 @@
      :logs/set-level log-level}))
 
 (fx/defn send-logs
+  {:events [:logging.ui/send-logs-pressed]}
   [{:keys [db]}]
   ;; TODO: Add message explaining db export
   (let [db-json (types/clj->json (select-keys db [:app-state
@@ -73,11 +72,11 @@
                                                   :chat/last-outgoing-message-sent-at
                                                   :chat/spam-messages-frequency
                                                   :chats/loading?
-                                                  :dimensions/window
-                                                  :my-profile/editing?]))]
+                                                  :dimensions/window]))]
     {:logs/archive-logs [db-json ::send-email]}))
 
 (fx/defn show-logs-dialog
+  {:events [:shake-event]}
   [{:keys [db]}]
   (when-not (:logging/dialog-shown? db)
     {:db
@@ -92,13 +91,8 @@
       :on-cancel           #(re-frame/dispatch
                              [:logging/dialog-canceled])}}))
 
-(handlers/register-handler-fx
- :show-client-error
- (fn [_ _]
-   {:utils/show-popup {:title   (i18n/label :t/cant-report-bug)
-                       :content (i18n/label :t/mail-should-be-configured)}}))
-
 (fx/defn dialog-closed
+  {:events [:logging/dialog-canceled]}
   [{:keys [db]}]
   {:db (dissoc db :logging/dialog-shown?)})
 
@@ -139,25 +133,3 @@
              [separator
               (datetime/timestamp->long-date
                (datetime/now))]))))
-
-(handlers/register-handler-fx
- ::send-email
- (fn [{:keys [db] :as cofx} [_ archive-path]]
-   (fx/merge
-    cofx
-    (dialog-closed)
-    (mail/send-email
-     {:subject    "Error report"
-      :recipients [report-email]
-      :body       (email-body db)
-      :attachment {:path archive-path
-                   :type "zip"
-                   :name "status_logs.zip"}}
-     (fn [event]
-       (when (= event "not_available")
-         (re-frame/dispatch [:show-client-error])))))))
-
-(handlers/register-handler-fx
- :logging/dialog-canceled
- (fn [cofx]
-   (dialog-closed cofx)))
