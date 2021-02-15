@@ -43,9 +43,10 @@
                   :align-items                      :flex-end})
     (when (and outgoing justify-timestamp?)
       [vector-icons/icon (case outgoing-status
-                           :sending  :tiny-icons/tiny-pending
-                           :sent     :tiny-icons/tiny-sent
-                           :not-sent :tiny-icons/tiny-warning
+                           :sending   :tiny-icons/tiny-pending
+                           :sent      :tiny-icons/tiny-sent
+                           :not-sent  :tiny-icons/tiny-warning
+                           :delivered :tiny-icons/tiny-delivered
                            :tiny-icons/tiny-pending)
        {:width  16
         :height 12
@@ -247,7 +248,7 @@
         [react/view {:width 62
                      :padding-left 14}
          (if (= community-id constants/status-community-id)
-           [react/image {:source (resources/get-image :status-logo)
+           [react/image {:source (resources/get-image :status-o)
                          :style {:width 40
                                  :height 40}}]
 
