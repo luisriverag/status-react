@@ -248,7 +248,7 @@
         [react/view {:width 62
                      :padding-left 14}
          (if (= community-id constants/status-community-id)
-           [react/image {:source (resources/get-image :status-o)
+           [react/image {:source (resources/get-image :status-logo)
                          :style {:width 40
                                  :height 40}}]
 
