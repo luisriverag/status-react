@@ -12,7 +12,7 @@
             [status-im.ui.components.topbar :as topbar])
   (:require-macros [status-im.utils.views :as views]))
 
-(def learn-more-url "https://our.status.im/")
+(def learn-more-url "")
 
 (defn on-buy-crypto-pressed []
   (re-frame/dispatch [:navigate-to :buy-crypto]))
@@ -43,9 +43,10 @@
      (i18n/label :t/buy-crypto)]]
    [quo/text {:color :secondary}
     (i18n/label :t/buy-crypto-choose-a-service)]
-   [react/touchable-highlight {:on-press #(re-frame/dispatch [:browser.ui/open-url learn-more-url])}
-    [react/view {:padding-vertical 11}
-     [quo/text {:color :link} (i18n/label :learn-more)]]]])
+   (when (seq learn-more-url)
+     [react/touchable-highlight {:on-press #(re-frame/dispatch [:browser.ui/open-url learn-more-url])}
+      [react/view {:padding-vertical 11}
+       [quo/text {:color :link} (i18n/label :learn-more)]]])])
 
 (views/defview buy-crypto []
   (views/letsubs [on-ramps [:buy-crypto/on-ramps]]
